@@ -1,0 +1,190 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MWALIMU_CLASSIC_LMS.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MWALIMU CLASSIC LMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #003366;
+            overflow-x: hidden;
+            padding-top: 60px;
+            transition: 0.5s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+     
+
+        
+
+            .sidebar a {
+                padding: 10px 15px;
+                text-decoration: none;
+                font-size: 16px;
+                color: #f8f9fa;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidebar a:hover {
+                    background-color: #002244;
+                }
+
+            .sidebar .active {
+                background-color: red;
+            }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: #002244;
+            color: white;
+            text-align: center;
+            margin-top: -60px;
+            margin-bottom: 20px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: 0.5s;
+        }
+
+        /* For mobile screens */
+        media screen and (max-width: 768px) {
+            .sidebar
+
+        {
+            width: 0;
+            padding-top: 15px;
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+
+        .sidebar.active {
+            width: 250px;
+        }
+
+        #sidebarCollapse {
+            display: block;
+        }
+
+        }
+
+        /* Toggle button for mobile */
+        #sidebarCollapse {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 999;
+        }
+
+        /* Push logout button to bottom */
+        .sidebar-logout {
+            margin-top: auto;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h4>MCLMS</h4>
+            </div>
+            <div class="user-info text-center mb-4">
+                <div class="text-white mb-2">Hello, @User.Identity?.Name!</div>
+            </div>
+
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Dashboard" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Customers" ? "active" : "")" asp-controller="Customers" asp-action="Index">Customers</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "CreditScores" ? "active" : "")" asp-controller="CreditScores" asp-action="Index">Credit Scores</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Accounts" ? "active" : "")" asp-controller="Accounts" asp-action="Index">Accounts</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Payments" ? "active" : "")" asp-controller="Payments" asp-action="Index">Payments</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Collaterals" ? "active" : "")" asp-controller="Collaterals" asp-action="Index">Collaterals</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Loans" ? "active" : "")" asp-controller="Loans" asp-action="Index">Loan Applications</a>
+            <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "LoanOfficers" ? "active" : "")" asp-controller="LoanOfficers" asp-action="Index">Loan Officers</a>
+
+            <!-- Logout Button at Bottom -->
+            <div class="sidebar-logout">
+                <form class="form-inline text-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="btn btn-danger btn-block mt-4">Logout</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Mobile toggle -->
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            <span>Menu</span>
+        </button>
+
+        <!-- Page content -->
+        <div class="main-content">
+            @RenderBody()
+        </div>
+    }
+    else
+    {
+        <!-- Login/Register navbar for non-authenticated users -->
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">MWALIMU CLASSIC LMs</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            @RenderBody()
+        </div>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+    <script>
+        // Toggle sidebar on mobile
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('.sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,110 @@
+﻿@model MWALIMU_CLASSIC_LMS.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+@* Add this near the top of your Create.cshtml and Edit.cshtml views *@
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h4>Error</h4>
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @if (ViewData["ValidationErrors"] != null)
+        {
+            <h5>Detailed Validation Errors:</h5>
+            <ul>
+                @foreach (var error in (List<string>)ViewData["ValidationErrors"])
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        }
+
+        @if (ViewData["ErrorDetails"] != null)
+        {
+            <h5>Error Details:</h5>
+            <div class="error-details">
+                <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#errorDetailsCollapse">
+                    Show/Hide Details
+                </button>
+                <div class="collapse mt-2" id="errorDetailsCollapse">
+                    <div class="card card-body">
+                        @foreach (var detail in (Dictionary<string, string>)ViewData["ErrorDetails"])
+                        {
+                            <div>
+                                <strong>@detail.Key:</strong>
+                                <pre>@detail.Value</pre>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@* Add this to display success messages *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<h1>Edit</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNo" class="control-label"></label>
+                <input asp-for="ContactNo" class="form-control" />
+                <span asp-validation-for="ContactNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkPlace" class="control-label"></label>
+                <input asp-for="WorkPlace" class="form-control" />
+                <span asp-validation-for="WorkPlace" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUserId" class="control-label"></label>
+                <select asp-for="ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
+                <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
